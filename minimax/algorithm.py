@@ -5,6 +5,7 @@ RED = (255,0,0)
 WHITE = (255, 255, 255)
 
 def minimax(position, depth, max_player, game):
+    """ Classifc minimax algorithm. """
     if depth == 0 or position.winner() != None:
         return position.evaluate(), position
     
@@ -28,6 +29,11 @@ def minimax(position, depth, max_player, game):
                 best_move = move
         
         return minEval, best_move
+
+
+def fun_minimax():
+    """ Custom minimax with custom heuristic. """
+    pass
 
 
 def simulate_move(piece, move, board, game, skip):
