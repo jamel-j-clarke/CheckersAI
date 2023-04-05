@@ -1,4 +1,4 @@
-# CSC 510 Final Project: Connect 4 AI
+# CSC 584 Final Project: Connect 4 AI
 
 ## To do
 - Think about heuristic options to measure how close or interesting a particular game state is. If this becomes too difficult, we could switch to a game where this is more easily defined (e.g. checkers)
