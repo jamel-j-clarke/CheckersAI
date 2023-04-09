@@ -15,8 +15,17 @@ class Board:
             for col in range(row % 2, COLS, 2):
                 pygame.draw.rect(win, RED, (row*SQUARE_SIZE, col *SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-    def evaluate(self):
-        return self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5)
+    def evaluate(self, heuristic='standard'):
+        if heuristic == 'standard':
+            # high piece differential (for white) is better
+            h = self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5)
+        elif heuristic == 'bad':
+            # high piece differential (for red) is better
+            h = self.red_left - self.white_left + (self.red_kings * 0.5 - self.white_kings * 0.5)
+        elif heuristic == 'equalize':
+            # piece differential close to 0 is better
+            h = 10 - abs(self.red_left - self.white_left)
+        return h
 
     def get_all_pieces(self, color):
         pieces = []

@@ -4,16 +4,15 @@ import pygame
 RED = (255,0,0)
 WHITE = (255, 255, 255)
 
-def minimax(position, depth, max_player, game):
-    """ Classifc minimax algorithm. """
+def minimax(position, depth, max_player, game, heuristic='standard'):
     if depth == 0 or position.winner() != None:
-        return position.evaluate(), position
+        return position.evaluate(heuristic), position
     
     if max_player:
         maxEval = float('-inf')
         best_move = None
         for move in get_all_moves(position, WHITE, game):
-            evaluation = minimax(move, depth-1, False, game)[0]
+            evaluation = minimax(move, depth-1, False, game, heuristic)[0]
             maxEval = max(maxEval, evaluation)
             if maxEval == evaluation:
                 best_move = move
@@ -23,17 +22,12 @@ def minimax(position, depth, max_player, game):
         minEval = float('inf')
         best_move = None
         for move in get_all_moves(position, RED, game):
-            evaluation = minimax(move, depth-1, True, game)[0]
+            evaluation = minimax(move, depth-1, True, game, heuristic)[0]
             minEval = min(minEval, evaluation)
             if minEval == evaluation:
                 best_move = move
         
         return minEval, best_move
-
-
-def fun_minimax():
-    """ Custom minimax with custom heuristic. """
-    pass
 
 
 def simulate_move(piece, move, board, game, skip):

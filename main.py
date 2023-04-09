@@ -9,6 +9,12 @@ FPS = 60
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Checkers')
 
+# Heuristic choice
+# 'standard' = original heuristic
+# 'bad' = bad gameplay heuristic
+# 'equalize' = equalize number of pieces
+HEURISTIC = 'standard'
+
 def get_row_col_from_mouse(pos):
     x, y = pos
     row = y // SQUARE_SIZE
@@ -24,7 +30,8 @@ def main():
         clock.tick(FPS)
         
         if game.turn == WHITE:
-            value, new_board = minimax(game.get_board(), 4, WHITE, game)
+            print(HEURISTIC)
+            value, new_board = minimax(game.get_board(), 4, WHITE, game, HEURISTIC)
             game.ai_move(new_board)
 
         if game.winner() != None:
