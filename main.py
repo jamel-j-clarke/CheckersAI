@@ -30,7 +30,6 @@ def main():
         clock.tick(FPS)
         
         if game.turn == WHITE:
-            print(HEURISTIC)
             value, new_board = minimax(game.get_board(), 4, WHITE, game, HEURISTIC)
             game.ai_move(new_board)
 
