@@ -1,5 +1,7 @@
 from copy import deepcopy
 import pygame
+import time
+import random
 
 RED = (255,0,0)
 WHITE = (255, 255, 255)
@@ -43,13 +45,52 @@ def abNegamax(position, depth, game, alpha, beta, heuristic='average'):
         currentScore = -evaluation
         
         if currentScore > best_score:
-            best_score = currentScore;
-            best_move = move;
+            best_score = currentScore
+            best_move = move
             
             if best_score >= beta:
                 break
     
     return best_score, best_move
+
+def avgmax(position, depth, max_player, game, heuristic='average'):
+    if depth == 0 or position.winner() is not None:
+        return position.evaluate(heuristic), position, []
+    
+    if max_player:
+        maxEval = float('-inf')
+        best_move = None
+        for move in get_all_moves(position, WHITE, game):
+            evaluation, _, _ = avgmax(move, depth - 1, False, game, heuristic)
+            maxEval = max(maxEval, evaluation)
+            if maxEval == evaluation:
+                best_move = move
+        
+        return maxEval, best_move, []
+    
+    else:
+        minEval = float('inf')
+        best_move = None
+        minEvalList = []
+        for move in get_all_moves(position, RED, game):
+            evaluation, _, _ = avgmax(move, depth - 1, True, game, heuristic)
+            minEval = min(minEval, evaluation)
+            minEvalList.append(evaluation)
+        
+        averageEval = sum(minEvalList) / len(minEvalList)
+        best_move = None
+        minDiff = float('inf')
+        for move, evaluation in zip(get_all_moves(position, RED, game), minEvalList):
+            diff = abs(evaluation - averageEval)
+            if diff < minDiff:
+                minDiff = diff
+                best_move = move
+            elif diff == minDiff:
+                best_move = random.choice([move, best_move])
+                
+        return averageEval, best_move, minEvalList
+
+
 
 def simulate_move(piece, move, board, game, skip):
     board.move(piece, move[0], move[1])
