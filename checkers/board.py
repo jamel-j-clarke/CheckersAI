@@ -26,7 +26,7 @@ class Board:
         elif heuristic == 'equalize':
             # piece differential close to 0 is better
             h = 10 - abs(self.red_left - self.white_left)
-        elif heuristic == 'average':
+        elif heuristic == 'combined':
             # generate the values
             standard_value = self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5)
             equalize_value = 10 - abs(self.red_left - self.white_left)

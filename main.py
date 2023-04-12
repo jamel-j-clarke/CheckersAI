@@ -2,7 +2,7 @@
 import pygame
 from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE
 from checkers.game import Game
-from minimax.algorithm import minimax, abNegamax, avgmax
+from minimax.algorithm import minimax, abNegamax, avgmax, random_move
 
 FPS = 60
 
@@ -13,8 +13,15 @@ pygame.display.set_caption('Checkers')
 # 'standard' = original heuristic
 # 'bad' = bad gameplay heuristic
 # 'equalize' = equalize number of pieces
-# 'average' = combination of the three
+# 'combined' = combination of the three
 HEURISTIC = 'standard'
+
+# AI choice
+# - standard
+# - custom
+# - avgmax
+# - random
+AI_TYPE = 'standard'
 
 def get_row_col_from_mouse(pos):
     x, y = pos
@@ -31,9 +38,15 @@ def main():
         clock.tick(FPS)
         
         if game.turn == WHITE:
-            value, new_board, _ = avgmax(game.get_board(), 4, WHITE, game, HEURISTIC)
-            #value, new_board = abNegamax(game.get_board(), 4, game, float('-inf'), float('inf'), HEURISTIC)
-            #value, new_board = minimax(game.get_board(), 4, WHITE, game, HEURISTIC)
+            if AI_TYPE == 'standard':
+                value, new_board = minimax(game.get_board(), 4, WHITE, game, 'standard')
+            elif AI_TYPE == 'custom':
+                value, new_board = minimax(game.get_board(), 4, WHITE, game, 'combined')
+            elif AI_TYPE == 'avgmax':
+                value, new_board, _ = avgmax(game.get_board(), 4, WHITE, game, HEURISTIC)
+            elif AI_TYPE == 'random':
+                new_board = random_move(game.get_board(), game)
+
             game.ai_move(new_board)
 
         try:

@@ -1,6 +1,5 @@
 from copy import deepcopy
 import pygame
-import time
 import random
 
 RED = (255,0,0)
@@ -8,7 +7,11 @@ WHITE = (255, 255, 255)
 #alpha = float('-inf')
 #beta = float('inf')
 
-def minimax(position, depth, max_player, game, heuristic='average'):
+def random_move(position, game):
+    moves = get_all_moves(position, WHITE, game)
+    return random.choice(moves)
+
+def minimax(position, depth, max_player, game, heuristic='combined'):
     if depth == 0 or position.winner() != None:
         return position.evaluate(heuristic), position
     
