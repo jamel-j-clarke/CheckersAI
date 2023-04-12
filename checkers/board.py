@@ -1,6 +1,7 @@
 import pygame
-from .constants import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
+
 from .piece import Piece
+from .constants import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
 
 class Board:
     def __init__(self):
@@ -25,6 +26,66 @@ class Board:
         elif heuristic == 'equalize':
             # piece differential close to 0 is better
             h = 10 - abs(self.red_left - self.white_left)
+        elif heuristic == 'average':
+            # generate the values
+            standard_value = self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5)
+            equalize_value = 10 - abs(self.red_left - self.white_left)
+            bad_value = self.red_left - self.white_left + (self.red_kings * 0.5 - self.white_kings * 0.5)
+            
+            # the way heuristic values will be prioritized are as follows:
+            # normal prioritization:    1) 55%  2) 35%  3) 10%
+            # increased prioritization: 1) 65%  2) 30%  3) 5%
+            # decreased prioritization: 1) 45%  2) 40%  3) 15%
+            
+            # if there are more red pieces than white pieces, prioritize standard.
+            if (self.white_left < self.red_left):
+                
+                # if there are more red kings than white kings, increase priority
+                if (self.white_kings < self.red_kings):
+                    h = 0.65 * standard_value + 0.30 * equalize_value + 0.05 * bad_value
+                
+                # if there are more white kings than red kings, decrease priority
+                elif (self.white_kings > self.red_kings):
+                    h = 0.45 * standard_value + 0.35 * equalize_value + 0.15 * bad_value 
+                
+                # if there are an equal number of red kings and white kings, normally prioritize
+                else:
+                    h = 0.55 * standard_value + 0.35 * equalize_value + 0.1 * bad_value 
+                
+            # if there are more white pieces than red pieces, prioritize bad.
+            elif (self.white_left > self.red_left):
+                
+                # if there are more red kings than white kings, decrease priority
+                if (self.white_kings < self.red_kings):
+                    h = 0.15 * standard_value + 0.4 * equalize_value + 0.45 * bad_value 
+                    
+                # if there are more white kings than red kings, increase priority
+                elif (self.white_kings > self.red_kings):
+                    h = 0.05 * standard_value + 0.3 * equalize_value + 0.65 * bad_value 
+                
+                # if there are an equal number of red kinds and white kings, normally prioritize bad
+                else:
+                    h = 0.1 * standard_value + 0.35 * equalize_value + 0.55 * bad_value 
+                
+            # otherwise, prioritize equalize 
+            # to make the ai be a bit more naturally 'aggressive', as it is presumed that this is
+            # the state the ai will more often than not be in:
+            # bad priority <= standard priority <= equalize priority
+            else:
+                
+                # if there are more red kings than white kings, increase standard's priority
+                if (self.white_kings < self.red_kings):
+                    h = 0.40 * standard_value + 0.55 * equalize_value + 0.05 * bad_value
+                
+                # if there are more white kings than red kings, increase bad's priority
+                elif (self.white_kings > self.red_kings):
+                    h = 0.225 * standard_value + 0.55 * equalize_value + 0.225 * bad_value
+                
+                # if there are an equal number of red kings and white kings, normally prioritize
+                # equalize with standard and bad being evenly weighted
+                else:
+                    h = 0.32 * standard_value + 0.50 * equalize_value + 0.18 * bad_value
+                
         return h
 
     def get_all_pieces(self, color):

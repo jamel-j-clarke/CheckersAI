@@ -2,7 +2,7 @@
 import pygame
 from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, RED, WHITE
 from checkers.game import Game
-from minimax.algorithm import minimax
+from minimax.algorithm import minimax, abNegamax
 
 FPS = 60
 
@@ -13,7 +13,7 @@ pygame.display.set_caption('Checkers')
 # 'standard' = original heuristic
 # 'bad' = bad gameplay heuristic
 # 'equalize' = equalize number of pieces
-HEURISTIC = 'standard'
+HEURISTIC = 'average'
 
 def get_row_col_from_mouse(pos):
     x, y = pos
@@ -30,12 +30,24 @@ def main():
         clock.tick(FPS)
         
         if game.turn == WHITE:
-            value, new_board = minimax(game.get_board(), 4, WHITE, game, HEURISTIC)
+            value, new_board = abNegamax(game.get_board(), 4, game, float('-inf'), float('inf'), HEURISTIC)
+            #value, new_board = minimax(game.get_board(), 4, WHITE, game, HEURISTIC)
             game.ai_move(new_board)
 
-        if game.winner() != None:
-            print(game.winner())
-            run = False
+        try:
+            winner = game.winner()
+            if winner != None:
+                if winner == WHITE:
+                    print("Congrats White!")
+                if winner == RED:
+                    print("Congrats Red!")
+                    
+                run = False
+                pygame.quit()
+        except AttributeError:
+            print("Congrats! " + winner)
+            continue
+        
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

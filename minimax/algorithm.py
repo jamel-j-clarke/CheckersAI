@@ -3,8 +3,10 @@ import pygame
 
 RED = (255,0,0)
 WHITE = (255, 255, 255)
+#alpha = float('-inf')
+#beta = float('inf')
 
-def minimax(position, depth, max_player, game, heuristic='standard'):
+def minimax(position, depth, max_player, game, heuristic='average'):
     if depth == 0 or position.winner() != None:
         return position.evaluate(heuristic), position
     
@@ -27,8 +29,27 @@ def minimax(position, depth, max_player, game, heuristic='standard'):
             if minEval == evaluation:
                 best_move = move
         
-        return minEval, best_move
+        return minEval, best_move            
 
+def abNegamax(position, depth, game, alpha, beta, heuristic='average'):
+    if depth == 0 or position.winner() != None:
+        return position.evaluate(heuristic), position
+    
+    best_move = None
+    best_score = float('-inf')
+    
+    for move in get_all_moves(position, WHITE, game):
+        evaluation = abNegamax(move, depth-1, game, -beta, -max(alpha, best_score), heuristic)[0]
+        currentScore = -evaluation
+        
+        if currentScore > best_score:
+            best_score = currentScore;
+            best_move = move;
+            
+            if best_score >= beta:
+                break
+    
+    return best_score, best_move
 
 def simulate_move(piece, move, board, game, skip):
     board.move(piece, move[0], move[1])
