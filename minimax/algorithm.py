@@ -80,7 +80,8 @@ def avgmax(position, depth, max_player, game, heuristic='average'):
             minEval = min(minEval, evaluation)
             minEvalList.append(evaluation)
         
-        averageEval = sum(minEvalList) / len(minEvalList)
+        if (len(minEvalList) > 0):
+            averageEval = sum(minEvalList) / len(minEvalList)
         best_move = None
         minDiff = float('inf')
         for move, evaluation in zip(get_all_moves(position, RED, game), minEvalList):
