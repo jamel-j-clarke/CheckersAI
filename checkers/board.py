@@ -75,16 +75,16 @@ class Board:
                 
                 # if there are more red kings than white kings, increase standard's priority
                 if (self.white_kings < self.red_kings):
-                    h = 0.40 * standard_value + 0.55 * equalize_value + 0.05 * bad_value
+                    h = 0.75 * standard_value + 0.2 * equalize_value + 0.05 * bad_value
                 
                 # if there are more white kings than red kings, increase bad's priority
                 elif (self.white_kings > self.red_kings):
-                    h = 0.225 * standard_value + 0.55 * equalize_value + 0.225 * bad_value
+                    h = 0.35 * standard_value + 0.3 * equalize_value + 0.35 * bad_value
                 
                 # if there are an equal number of red kings and white kings, normally prioritize
                 # equalize with standard and bad being evenly weighted
                 else:
-                    h = 0.32 * standard_value + 0.50 * equalize_value + 0.18 * bad_value
+                    h = 0.55 * standard_value + 0.4 * equalize_value + 0.05 * bad_value
                 
         return h
 
