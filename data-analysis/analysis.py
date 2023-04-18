@@ -17,19 +17,28 @@ def plot_difficulty_vs_fun(df):
     plt.clf()
 
 def plot_ai_difficulties(df):
-    plot = sns.barplot(df, x='AI Type', y='Difficulty')
+    plot = sns.barplot(df, x='AI Type', y='Difficulty', errorbar=None)
+    plot.set_yticks(range(1, 11), labels=range(1, 11))
+    plot.bar_label(plot.containers[0])
+    plt.title('How Difficult is the AI?', fontsize=20)
     fig = plot.get_figure()
     fig.savefig(OUT_DIR + "AI_difficulties.png")
     plt.clf()
 
 def plot_ai_fun(df):
-    plot = sns.barplot(df, x='AI Type', y='Fun')
+    plot = sns.barplot(df, x='AI Type', y='Fun', errorbar=None)
+    plot.set_yticks(range(1, 11), labels=range(1, 11))
+    plot.bar_label(plot.containers[0])
+    plt.title('How Fun is the AI?', fontsize=20)
     fig = plot.get_figure()
     fig.savefig(OUT_DIR + "AI_fun.png")
     plt.clf()
 
 def plot_ai_humanlike(df):
-    plot = sns.barplot(df, x='AI Type', y='Humanlike')
+    plot = sns.barplot(df, x='AI Type', y='Humanlike', errorbar=None)
+    plot.set_yticks(range(1, 11), labels=range(1, 11))
+    plot.bar_label(plot.containers[0])
+    plt.title('How Humanlike is the AI?', fontsize=20)
     fig = plot.get_figure()
     fig.savefig(OUT_DIR + "AI_humanlike.png")
     plt.clf()
@@ -39,6 +48,7 @@ def plot_ai_outcomes(df):
         data=df,
         x="AI Type", hue="Outcome"
     )
+    plt.title('What Was the Game\'s Outcome?', fontsize=20)
     fig = plot.get_figure()
     fig.savefig(OUT_DIR + "AI_outcomes.png")
     plt.clf()
@@ -80,12 +90,12 @@ def wordcloud(df):
     plt.clf()
 
 def generate_plots(df):
-    plot_difficulty_vs_fun(df)
+    #plot_difficulty_vs_fun(df)
     plot_ai_difficulties(df)
     plot_ai_fun(df)
     plot_ai_humanlike(df)
     plot_ai_outcomes(df)
-    wordcloud(df)
+    #wordcloud(df)
 
 def main():
     df = load_data(DATA_FN)
